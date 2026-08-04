@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@media print {
+  /* Sembunyikan seluruh sidebar, navbar, dan tombol aksi */
+  aside, nav, header, button, .print\:hidden {
+    display: none !important;
+  }
+
+  /* Buat area utama mengambil lebar penuh */
+  body, main, #root {
+    background-color: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Hilangkan margin/padding pembatas admin layout */
+  .flex-1 {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+}
