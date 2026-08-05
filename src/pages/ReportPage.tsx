@@ -10,10 +10,13 @@ export default function ReportPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Ambil URL Backend dari environment variable Vite
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   const fetchReport = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/reports/${reportType}`);
+      const res = await fetch(`${API_URL}/api/reports/${reportType}`);
       const data = await res.json();
       if (data.status === 'success') {
         setReportData(data);

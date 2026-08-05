@@ -11,6 +11,9 @@ export default function TicketManagementPage({ tickets: propTickets, refreshTick
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Ambil URL Backend dari environment variable Vite
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   // Sinkronisasi data jika props berubah dari App.tsx
   useEffect(() => {
     if (propTickets) {
@@ -21,7 +24,7 @@ export default function TicketManagementPage({ tickets: propTickets, refreshTick
   const handleDelete = async (id: number) => {
     if (!confirm('Apakah Anda yakin ingin menghapus tiket ini?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/tickets/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/api/tickets/${id}`, { method: 'DELETE' });
       if (res.ok) {
         if (refreshTickets) refreshTickets();
       }
@@ -32,7 +35,7 @@ export default function TicketManagementPage({ tickets: propTickets, refreshTick
 
   const handleViewDetail = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tickets/${id}`);
+      const res = await fetch(`${API_URL}/api/tickets/${id}`);
       const data = await res.json();
       if (data.status === 'success') {
         setSelectedTicket(data.data);

@@ -40,6 +40,9 @@ export default function App() {
   const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
   const employeeDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Ambil URL Backend dari environment variable Vite
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   // Tutup dropdown jika klik di luar area
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -53,7 +56,7 @@ export default function App() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/categories');
+      const res = await fetch(`${API_URL}/api/categories`);
       const data = await res.json();
       if (data.status === 'success') setCategories(data.data);
     } catch (err) {
@@ -68,7 +71,7 @@ export default function App() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/employees');
+      const res = await fetch(`${API_URL}/api/employees`);
       const data = await res.json();
       if (data.status === 'success') setEmployees(data.data);
     } catch (err) {
@@ -78,7 +81,7 @@ export default function App() {
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/tickets');
+      const res = await fetch(`${API_URL}/api/tickets`);
       const data = await res.json();
       if (data.status === 'success') setTickets(data.data);
     } catch (err) {
@@ -112,7 +115,7 @@ export default function App() {
 
     setFormLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/tickets', {
+      const res = await fetch(`${API_URL}/api/tickets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

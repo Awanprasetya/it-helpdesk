@@ -27,6 +27,9 @@ export default function AssetManagementPage() {
   const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false);
   const employeeDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Ambil URL Backend dari environment variable Vite
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   // Tutup dropdown jika klik di luar area
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,7 +43,7 @@ export default function AssetManagementPage() {
 
   const fetchAssets = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/assets');
+      const res = await fetch(`${API_URL}/api/assets`);
       const data = await res.json();
       if (data.status === 'success') setAssets(data.data);
     } catch (err) {
@@ -50,7 +53,7 @@ export default function AssetManagementPage() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/employees');
+      const res = await fetch(`${API_URL}/api/employees`);
       const data = await res.json();
       if (data.status === 'success') setEmployees(data.data);
     } catch (err) {
@@ -113,8 +116,8 @@ export default function AssetManagementPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const url = isEditMode 
-      ? `http://localhost:5000/api/assets/${selectedAsset.id}` 
-      : 'http://localhost:5000/api/assets';
+      ? `${API_URL}/api/assets/${selectedAsset.id}` 
+      : `${API_URL}/api/assets`;
     const method = isEditMode ? 'PUT' : 'POST';
 
     try {
@@ -146,7 +149,7 @@ export default function AssetManagementPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('Yakin ingin menghapus aset ini?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/assets/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/api/assets/${id}`, { method: 'DELETE' });
       if (res.ok) fetchAssets();
     } catch (err) {
       alert('Gagal menghapus aset');
