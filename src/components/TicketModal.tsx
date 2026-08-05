@@ -8,7 +8,7 @@ export default function TicketModal({ categories, currentUser, onClose, onSucces
   const [priority, setPriority] = useState('Medium');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Ambil URL Backend dari environment variable Vite
+  // Ambil URL Backend dari environment variable Vite secara aman
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const handleSubmit = async (e: React.FormEvent) => {
