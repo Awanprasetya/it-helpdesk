@@ -8,12 +8,15 @@ export default function TicketModal({ categories, currentUser, onClose, onSucces
   const [priority, setPriority] = useState('Medium');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Ambil URL Backend dari environment variable Vite
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/tickets', {
+      const response = await fetch(`${API_URL}/api/tickets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

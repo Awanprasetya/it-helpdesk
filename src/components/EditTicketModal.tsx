@@ -13,9 +13,12 @@ export default function EditTicketModal({ ticket, onClose, onSuccess }: any) {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Ambil URL Backend dari environment variable Vite
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   // Ambil daftar admin / user handler saat modal dibuka
   useEffect(() => {
-    fetch('http://localhost:5000/api/tickets/admins')
+    fetch(`${API_URL}/api/tickets/admins`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 'success') {
@@ -23,14 +26,14 @@ export default function EditTicketModal({ ticket, onClose, onSuccess }: any) {
         }
       })
       .catch((err) => console.error('Gagal memuat daftar admin handler:', err));
-  }, []);
+  }, [API_URL]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tickets/${ticket.id}`, {
+      const response = await fetch(`${API_URL}/api/tickets/${ticket.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
