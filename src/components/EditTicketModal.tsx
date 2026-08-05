@@ -7,13 +7,13 @@ export default function EditTicketModal({ ticket, onClose, onSuccess }: any) {
   const [editPriority, setEditPriority] = useState(ticket.priority);
   const [editStatus, setEditStatus] = useState(ticket.status);
   
-  // State baru untuk penugasan admin/handler
+  // State untuk penugasan admin/handler
   const [assignedTo, setAssignedTo] = useState(ticket.assignedTo || '');
   const [adminList, setAdminList] = useState<any[]>([]);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Ambil URL Backend dari environment variable Vite
+  // Ambil URL Backend dari environment variable Vite secara aman
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   // Ambil daftar admin / user handler saat modal dibuka
@@ -25,7 +25,7 @@ export default function EditTicketModal({ ticket, onClose, onSuccess }: any) {
           setAdminList(data.data);
         }
       })
-      .catch((err) => console.error('Gagal memuat daftar admin handler:', err));
+      .catch(() => console.error('Gagal memuat daftar admin handler'));
   }, [API_URL]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,7 +52,7 @@ export default function EditTicketModal({ ticket, onClose, onSuccess }: any) {
       } else {
         alert(data.message || 'Gagal memperbarui tiket');
       }
-    } catch (err) {
+    } catch {
       alert('Kesalahan koneksi server');
     } finally {
       setIsSubmitting(false);
@@ -115,7 +115,7 @@ export default function EditTicketModal({ ticket, onClose, onSuccess }: any) {
             </div>
           </div>
 
-          {/* Input Dropdown Baru: Petugas / Admin yang Mengerjakan */}
+          {/* Input Dropdown: Petugas / Admin yang Mengerjakan */}
           <div>
             <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Admin / Petugas yang Mengerjakan</label>
             <select
