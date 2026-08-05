@@ -26,7 +26,7 @@ export default function TicketModal({ categories, onClose, onSuccess }: any) {
       .then((data) => {
         if (data.status === 'success') setEmployees(data.data);
       })
-      .catch((err) => console.error('Gagal memuat data karyawan'));
+      .catch(() => console.error('Gagal memuat data karyawan'));
 
     // Tutup dropdown jika klik di luar area
     const handleClickOutside = (event: MouseEvent) => {
@@ -75,7 +75,7 @@ export default function TicketModal({ categories, onClose, onSuccess }: any) {
       } else {
         alert(data.message || 'Gagal membuat tiket');
       }
-    } catch (err) {
+    } catch {
       alert('Terjadi kesalahan koneksi ke server.');
     } finally {
       setIsSubmitting(false);
