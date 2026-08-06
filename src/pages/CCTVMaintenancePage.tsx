@@ -1,4 +1,4 @@
-
+import  { useState, useEffect } from 'react';
 import { Plus, X, Search, ChevronLeft, ChevronRight, Video } from 'lucide-react';
 import CCTVMaintenanceModal from '../components/CCTVMaintenanceModal';
 
