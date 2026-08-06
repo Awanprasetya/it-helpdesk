@@ -8,6 +8,8 @@ import AssetManagementPage from './pages/AssetManagementPage';
 import ReportPage from './pages/ReportPage';
 import TicketModal from './components/TicketModal';
 import EditTicketModal from './components/EditTicketModal';
+import MaintenancePage from './pages/MaintenancePage';
+import CCTVMaintenancePage from './pages/CCTVMaintenancePage'; // <-- Import Halaman CCTV
 
 export default function App() {
   // Mode tampilan awal: 'user-form' (untuk publik/pelapor) atau 'admin' (setelah login)
@@ -327,11 +329,28 @@ export default function App() {
             <AssetManagementPage />
           )}
 
+          {/* Maintenance Komputer */}
+          {(activeTab === 'maintenance-pc' || activeTab === 'maintenance') && (
+            <MaintenancePage />
+          )}
+
+          {/* Maintenance CCTV */}
+          {activeTab === 'maintenance-cctv' && (
+            <CCTVMaintenancePage />
+          )}
+
           {activeTab === 'reports' && (
             <ReportPage />
           )}
 
-          {activeTab !== 'dashboard' && activeTab !== 'tickets' && activeTab !== 'assets' && activeTab !== 'reports' && (
+          {/* Fallback jika ada tab lain yang belum terdaftar */}
+          {activeTab !== 'dashboard' && 
+           activeTab !== 'tickets' && 
+           activeTab !== 'assets' && 
+           activeTab !== 'maintenance-pc' && 
+           activeTab !== 'maintenance' && 
+           activeTab !== 'maintenance-cctv' && 
+           activeTab !== 'reports' && (
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-2 capitalize">{activeTab}</h2>
               <p className="text-slate-400 text-sm">Modul dan fungsionalitas untuk halaman {activeTab} sedang dipersiapkan.</p>
