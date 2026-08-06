@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+
 import { Plus, X, Search, ChevronLeft, ChevronRight, Monitor } from 'lucide-react';
 import MaintenanceModal from '../components/MaintenanceModal';
 

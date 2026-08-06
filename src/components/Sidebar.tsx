@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import { LayoutDashboard, Ticket, HardDrive, Users, Settings, LogOut, BarChart3, CheckSquare, ChevronDown, ChevronUp, Monitor, Video } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, onLogout }: any) {
