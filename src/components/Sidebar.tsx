@@ -1,5 +1,5 @@
-import  { useState } from 'react';
-import { LayoutDashboard, Ticket, HardDrive, Users, Settings, LogOut, BarChart3, CheckSquare, ChevronDown, ChevronUp, Monitor, Video } from 'lucide-react';
+import { useState } from 'react';
+import { LayoutDashboard, Ticket, HardDrive, Users, Settings, LogOut, BarChart3, CheckSquare, ChevronDown, ChevronUp, Monitor, Video, Eye } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, onLogout }: any) {
   // State untuk mengontrol apakah dropdown maintenance terbuka atau tertutup
@@ -57,7 +57,7 @@ export default function Sidebar({ activeTab, setActiveTab, onLogout }: any) {
           <button 
             onClick={() => setIsMaintenanceOpen(!isMaintenanceOpen)}
             className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${
-              activeTab === 'maintenance-pc' || activeTab === 'maintenance-cctv' || activeTab === 'maintenance'
+              activeTab === 'maintenance-pc' || activeTab === 'maintenance-cctv' || activeTab === 'maintenance' || activeTab === 'cctv-monitor'
                 ? 'text-white bg-slate-800/40'
                 : 'text-slate-400 hover:bg-slate-800/60 hover:text-white'
             }`}
@@ -94,6 +94,19 @@ export default function Sidebar({ activeTab, setActiveTab, onLogout }: any) {
               >
                 <Video size={16} />
                 <span>Maintenance CCTV</span>
+              </button>
+
+              {/* Menu Baru: Monitoring IP CCTV */}
+              <button
+                onClick={() => setActiveTab('cctv-monitor')}
+                className={`w-full flex items-center space-x-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                  activeTab === 'cctv-monitor' 
+                    ? 'bg-blue-600 text-white shadow-md font-semibold' 
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                }`}
+              >
+                <Eye size={16} />
+                <span>Monitoring IP CCTV</span>
               </button>
             </div>
           )}

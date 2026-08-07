@@ -24,15 +24,18 @@ export default function CCTVMaintenanceModal({ onClose, onSuccess, areaTitle = '
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    // Generate item checklist CCTV dengan ID menyesuaikan database master (101 - 133)
+    // Generate item checklist CCTV dengan ID yang sinkron persis dengan master database (101 - 136)
     const generatedItems: CCTVChecklistItem[] = [
-      { id: 101, title: 'Kapasitas Penyimpanan (HDD/NVR)', status: 'Normal', detail: '' }
+      { id: 101, title: 'Harddisk Storage (Recording)', status: 'Normal', detail: '' },
+      { id: 102, title: 'Adaptor / Power Supply DVR/NVR', status: 'Normal', detail: '' },
+      { id: 103, title: 'Koneksi Jaringan / Online CCTV', status: 'Normal', detail: '' },
+      { id: 104, title: 'Kebersihan Perangkat DVR/NVR', status: 'Normal', detail: '' },
     ];
 
     for (let i = 1; i <= 32; i++) {
       generatedItems.push({
-        id: 101 + i, // ID berurutan dari 102 hingga 133
-        title: `Kamera ${i}`,
+        id: 104 + i, // ID berurutan dari 105 hingga 136 untuk Kamera Channel 01 - 32
+        title: `Kamera Channel ${i < 10 ? '0' + i : i}`,
         status: 'Normal',
         detail: ''
       });
@@ -195,7 +198,7 @@ export default function CCTVMaintenanceModal({ onClose, onSuccess, areaTitle = '
             </div>
           </div>
 
-          {/* Tabel Ceklist (Scrollable ke bawah karena total 33 baris) */}
+          {/* Tabel Ceklist (Scrollable ke bawah karena total baris item CCTV) */}
           <div className="overflow-x-auto max-h-[450px] border border-slate-800 rounded-xl">
             <table className="w-full text-left border-collapse relative">
               <thead className="sticky top-0 z-10">

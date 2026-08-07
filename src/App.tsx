@@ -9,7 +9,8 @@ import ReportPage from './pages/ReportPage';
 import TicketModal from './components/TicketModal';
 import EditTicketModal from './components/EditTicketModal';
 import MaintenancePage from './pages/MaintenancePage';
-import CCTVMaintenancePage from './pages/CCTVMaintenancePage'; // <-- Import Halaman CCTV
+import CCTVMaintenancePage from './pages/CCTVMaintenancePage';
+import CCTVMonitorPage from './pages/CCTVMonitorPage'; // <-- Import Halaman Monitoring IP CCTV
 
 export default function App() {
   // Mode tampilan awal: 'user-form' (untuk publik/pelapor) atau 'admin' (setelah login)
@@ -339,6 +340,11 @@ export default function App() {
             <CCTVMaintenancePage />
           )}
 
+          {/* Monitoring IP CCTV (Baru) */}
+          {activeTab === 'cctv-monitor' && (
+            <CCTVMonitorPage />
+          )}
+
           {activeTab === 'reports' && (
             <ReportPage />
           )}
@@ -350,6 +356,7 @@ export default function App() {
            activeTab !== 'maintenance-pc' && 
            activeTab !== 'maintenance' && 
            activeTab !== 'maintenance-cctv' && 
+           activeTab !== 'cctv-monitor' && 
            activeTab !== 'reports' && (
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-2 capitalize">{activeTab}</h2>
