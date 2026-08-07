@@ -4,7 +4,7 @@ import { Wifi, WifiOff, RefreshCw, Plus, ShieldCheck, Loader2 } from 'lucide-rea
 export default function CCTVMonitorPage() {
   const [devices, setDevices] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isChecking, setIsChecking] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   // State modal tambah CCTV
   const [showAddModal, setShowAddModal] = useState(false);
@@ -14,8 +14,10 @@ export default function CCTVMonitorPage() {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-  const fetchDevices = async () => {
-    setIsLoading(true);
+  const fetchDevices = async (isManual = false) => {
+    if (isManual) setIsRefreshing(true);
+    else setIsLoading(true);
+
     try {
       const res = await fetch(`${API_URL}/api/cctv-monitor`);
       const json = await res.json();
@@ -26,22 +28,7 @@ export default function CCTVMonitorPage() {
       console.error('Gagal memuat data CCTV');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Fungsi untuk melakukan scan status IP (bisa dipanggil manual atau otomatis)
-  const handleCheckStatus = async () => {
-    setIsChecking(true);
-    try {
-      const res = await fetch(`${API_URL}/api/cctv-monitor/check-status`);
-      const json = await res.json();
-      if (json.status === 'success') {
-        setDevices(json.data);
-      }
-    } catch (err) {
-      console.error('Gagal mengecek status jaringan CCTV.');
-    } finally {
-      setIsChecking(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -68,20 +55,13 @@ export default function CCTVMonitorPage() {
   };
 
   useEffect(() => {
-    // 1. Ambil data awal saat halaman dibuka, lalu langsung jalankan scan IP otomatis
-    const loadAndScan = async () => {
-      setIsLoading(true);
-      await fetchDevices();
-      await handleCheckStatus(); // Auto scan saat pertama kali halaman dirender
-      setIsLoading(false);
-    };
+    // 1. Ambil data awal saat halaman dibuka
+    fetchDevices();
 
-    loadAndScan();
-
-    // 2. Auto scan status IP secara berkala setiap 2 menit (120000 ms) di background
+    // 2. Refresh data secara berkala setiap 30 detik untuk melihat hasil update dari agent lokal
     const interval = setInterval(() => {
-      handleCheckStatus();
-    }, 120000);
+      fetchDevices();
+    }, 30000);
 
     return () => clearInterval(interval);
   }, []);
@@ -97,12 +77,12 @@ export default function CCTVMonitorPage() {
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={handleCheckStatus}
-            disabled={isChecking}
+            onClick={() => fetchDevices(true)}
+            disabled={isRefreshing}
             className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-medium transition cursor-pointer disabled:opacity-50"
           >
-            <RefreshCw size={16} className={isChecking ? 'animate-spin' : ''} />
-            {isChecking ? 'Memeriksa...' : 'Scan Status IP'}
+            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+            {isRefreshing ? 'Memperbarui...' : 'Refresh Data'}
           </button>
           <button
             onClick={() => setShowAddModal(true)}
@@ -117,7 +97,7 @@ export default function CCTVMonitorPage() {
       {isLoading && devices.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-slate-400 space-y-2">
           <Loader2 className="animate-spin text-blue-500" size={32} />
-          <p className="text-sm">Memuat & memindai perangkat CCTV...</p>
+          <p className="text-sm">Memuat perangkat CCTV...</p>
         </div>
       ) : devices.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/50 border border-slate-800 rounded-2xl">
