@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, X, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function TicketManagementPage({ tickets: propTickets, refreshTickets, openCreateModal, openEditModal }: any) {
@@ -46,12 +46,12 @@ export default function TicketManagementPage({ tickets: propTickets, refreshTick
     }
   };
 
-  // 1. Filter tiket berdasarkan Search Query
+  // 1. Filter tiket berdasarkan Search Query (Aman dari undefined/null)
   const filteredTickets = tickets.filter((t: any) => {
-    const ticketNo = t.ticketNumber || '';
-    const subject = t.title || t.subject || '';
-    const category = t.category?.name || '';
-    const reporter = t.user?.name || '';
+    const ticketNo = t?.ticketNumber || '';
+    const subject = t?.title || t?.subject || '';
+    const category = t?.category?.name || '';
+    const reporter = t?.user?.name || t?.user?.fullName || '';
     const query = searchQuery.toLowerCase();
 
     return (
@@ -117,7 +117,7 @@ export default function TicketManagementPage({ tickets: propTickets, refreshTick
                     <td className="py-4 font-medium text-white">{t.ticketNumber}</td>
                     <td className="py-4 font-medium text-white">{t.title || t.subject}</td>
                     <td className="py-4 text-slate-400">{t.category?.name || '-'}</td>
-                    <td className="py-4">{t.user?.name || 'Karyawan'}</td>
+                    <td className="py-4">{t.user?.name || t.user?.fullName || 'Karyawan'}</td>
                     <td className="py-4"><span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">{t.priority}</span></td>
                     <td className="py-4"><span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300">{t.status}</span></td>
                     <td className="py-4 text-center space-x-2">
@@ -176,8 +176,8 @@ export default function TicketManagementPage({ tickets: propTickets, refreshTick
             </div>
             <div className="space-y-4 py-4 text-sm">
               <div className="grid grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-xl">
-                <div><span className="text-slate-400 block text-xs">Pelapor</span> <span className="font-semibold text-white">{selectedTicket.user?.name}</span></div>
-                <div><span className="text-slate-400 block text-xs">Kategori</span> <span className="font-semibold text-white">{selectedTicket.category?.name}</span></div>
+                <div><span className="text-slate-400 block text-xs">Pelapor</span> <span className="font-semibold text-white">{selectedTicket.user?.name || selectedTicket.user?.fullName || '-'}</span></div>
+                <div><span className="text-slate-400 block text-xs">Kategori</span> <span className="font-semibold text-white">{selectedTicket.category?.name || '-'}</span></div>
                 <div><span className="text-slate-400 block text-xs">Prioritas</span> <span className="font-semibold text-white">{selectedTicket.priority}</span></div>
                 <div><span className="text-slate-400 block text-xs">Status</span> <span className="font-semibold text-white">{selectedTicket.status}</span></div>
                 <div><span className="text-slate-400 block text-xs">Batas Waktu (Due Date)</span> <span className="font-semibold text-amber-400">{selectedTicket.due_date ? new Date(selectedTicket.due_date).toLocaleString() : '-'}</span></div>
