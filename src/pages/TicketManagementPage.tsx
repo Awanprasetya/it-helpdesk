@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Plus, X, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function TicketManagementPage({ tickets: propTickets, refreshTickets, openCreateModal, openEditModal }: any) {
