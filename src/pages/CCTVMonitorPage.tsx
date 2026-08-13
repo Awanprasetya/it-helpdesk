@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, WifiOff, RefreshCw, Plus, ShieldCheck, Loader2 } from 'lucide-react';
+import { Wifi, WifiOff, RefreshCw, Plus, ShieldCheck, Loader2, Filter } from 'lucide-react';
 
 export default function CCTVMonitorPage() {
   const [devices, setDevices] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
+  // State filter area
+  const [selectedArea, setSelectedArea] = useState('ALL');
+
   // State modal tambah CCTV
   const [showAddModal, setShowAddModal] = useState(false);
   const [name, setName] = useState('');
@@ -58,13 +61,22 @@ export default function CCTVMonitorPage() {
     // 1. Ambil data awal saat halaman dibuka
     fetchDevices();
 
-    // 2. Refresh data secara berkala setiap 30 detik untuk melihat hasil update dari agent lokal
+    // 2. Refresh data secara berkala setiap 5 detik
     const interval = setInterval(() => {
       fetchDevices();
-    }, 30000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Ambil daftar unik area/lokasi untuk opsi filter
+  const uniqueLocations = Array.from(new Set(devices.map(d => d.location).filter(Boolean)));
+
+  // Filter perangkat berdasarkan area yang dipilih
+  const filteredDevices = devices.filter(device => {
+    if (selectedArea === 'ALL') return true;
+    return device.location === selectedArea;
+  });
 
   return (
     <div className="p-6 text-white space-y-6">
@@ -73,9 +85,24 @@ export default function CCTVMonitorPage() {
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <ShieldCheck className="text-blue-500" /> Monitoring Status IP CCTV
           </h1>
-          <p className="text-xs text-slate-400 mt-1">Pantau kondisi nyala/mati perangkat CCTV berdasarkan jaringan IP secara *live*</p>
+          <p className="text-xs text-slate-400 mt-1">Pantau kondisi nyala/mati perangkat CCTV berdasarkan jaringan IP secara *live* (Auto-refresh 5s)</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Dropdown Filter Area */}
+          <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-2 rounded-xl">
+            <Filter size={16} className="text-slate-400" />
+            <select
+              value={selectedArea}
+              onChange={(e) => setSelectedArea(e.target.value)}
+              className="bg-transparent text-sm text-white focus:outline-none cursor-pointer [&>option]:bg-slate-900 [&>option]:text-white"
+            >
+              <option value="ALL">Semua Area ({devices.length})</option>
+              {uniqueLocations.map((loc: any, idx) => (
+                <option key={idx} value={loc}>{loc}</option>
+              ))}
+            </select>
+          </div>
+
           <button
             onClick={() => fetchDevices(true)}
             disabled={isRefreshing}
@@ -99,20 +126,14 @@ export default function CCTVMonitorPage() {
           <Loader2 className="animate-spin text-blue-500" size={32} />
           <p className="text-sm">Memuat perangkat CCTV...</p>
         </div>
-      ) : devices.length === 0 ? (
+      ) : filteredDevices.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/50 border border-slate-800 rounded-2xl">
-          <p className="text-slate-400 text-sm">Belum ada perangkat CCTV yang terdaftar.</p>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-blue-400 hover:text-blue-300"
-          >
-            <Plus size={14} /> Tambah perangkat pertama sekarang
-          </button>
+          <p className="text-slate-400 text-sm">Tidak ada perangkat CCTV ditemukan pada area ini.</p>
         </div>
       ) : (
         /* Grid Status CCTV */
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {devices.map((device) => {
+          {filteredDevices.map((device) => {
             const isOnline = device.status === 'ONLINE';
             return (
               <div 
